@@ -1,0 +1,53 @@
+---
+- name: setting up webservers
+  hosts: all
+  tasks:
+     - name: install apache
+       yum:
+         name: httpd
+         state: installed 
+     - name: enable and start httpd
+       service:
+         name: httpd
+         enabled: yes
+         state: started 
+     - name: install MYSQL DB community edition
+       yum:
+         name: 
+           - mariadb-server
+           - mariadb
+         state: installed 
+     
+     - name: start service 
+       service: 
+         name: mariadb
+         enabled: yes
+         state: started 
+     - name: install php
+       yum:
+         name:
+           - php
+           - php-mysql
+     - name: create file 
+       file:
+         name: /tmp/index.html
+         state: touch
+     
+     - name: copy php file /var/www/html
+       copy:
+         src: /tmp/index.html
+         dest: /var/www/html/index.html 
+     - name: stop firewalld
+       firewalld:
+         service: httpd
+         state: enabled
+         permanent: yes
+         immediate: yes
+     - name: setenfore
+       selinux:
+         policy: targeted
+         state: permissive
+     - name: httpd
+       service:
+         name: httpd
+         state: restarted
