@@ -1,0 +1,18 @@
+---
+- name: adding user
+  hosts: all
+  vars:
+    ABC:
+     - { nm: shahid, st: present }
+     - { nm: joe, st: present }
+     - { nm: zoey, st: present }
+  tasks:
+    - name: adding user
+      user:
+        name: "{{ item.nm }}"
+        state: "{{ item.st }}"
+      loop: "{{ ABC }}"
+      tags: users
+      
+
+
